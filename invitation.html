@@ -1,0 +1,160 @@
+
+
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+      <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i|Source+Sans+Pro:400,600,700" rel="stylesheet">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+      <link rel="stylesheet" href="assets/css/general.css?rnd=e5b37301810b9587d88b1d0927e4ecab">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <title>PayMHO</title>
+
+      <script src="https://www.google.com/recaptcha/api.js"></script>
+
+
+    </head>
+
+    <body>
+
+      <div class="container w800 my-5 ">
+        <div class="row">
+          <div class="col-md-12">
+            <img class="logo img-fluid mx-auto" src="assets/img/logo.svg?rnd=e5b37301810b9587d88b1d0927e4ecab" alt="">
+          </div>
+        </div>
+        <div class="row">
+          <div id="content_" class="col-md-12 px-5 mt-5">
+
+					<div class="mpr17 mb-3 text-justify">
+					Página de registro para la plática: <br>
+					<strong style="font-size:18px;">Invierte en el Futuro: Blockchain y sus aplicaciones.</strong> <br>
+Ayúdanos registrándote para agilizar la entrada al evento.
+<br>
+Conferencia el día 04 Octubre, en CINTERMEX a las Av Fundidora 501, Col. Obrera, MTY, N.L. 2o Piso en el Salon Oceania en punto de las 18:00hrs.
+										</div>
+
+            <div class="pmho_input mb-2">
+              <input type="text" placeholder="Nombre" id="nombre">
+            </div>
+
+            <div class="pmho_input mb-2">
+              <input type="email" placeholder="Teléfono" id="telefono">
+            </div>
+
+						<div class="pmho_input mb-2">
+              <input type="email" placeholder="Email" id="email">
+            </div>
+
+						<div class="mb-4">
+            	<p id="message_captcha"></p>
+            </div>
+
+            <div class="pmho_btn1">
+						              <a href="#send" class="send_">Enviar</a>
+						            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+<div class="container-fluid bg293A44 h153 bg_pa">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-12 py-5">
+
+        <div class="copyright text-center">Copyright 2018 (c) Ideas Rewards S.A. de C.V.</div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
+<script>
+
+	function enableBtn(){
+		//document.getElementById("button1").disabled = false;
+		console.log(1);
+	}
+
+	function validateEmail(email){
+	  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	  return re.test(String(email).toLowerCase());
+	}
+
+	$(function(){
+
+
+		$('.send_').on('click', function(e){
+
+			e.preventDefault();
+
+			console.log('Entro');
+
+			var nombre      = $('#nombre').val();
+			var email     = $('#email').val();
+			var telefono     = $('#telefono').val();
+
+			var v_success = true;
+
+			if(validateEmail(email) == false){
+				v_success     = false;
+				message_toas  = 'Correo invalido';
+			}
+
+			if(nombre.length < 3){
+				v_success     = false;
+				message_toas  = 'Nombre invalido';
+			}
+
+			if(telefono.length < 8){
+				v_success     = false;
+				message_toas  = 'Teléfono invalido';
+			}
+
+			if(v_success != true){
+
+				$('#message_captcha').html('<div class="alert alert-danger" role="alert">'+message_toas+'</div>');
+
+			}else{
+
+
+				 $.ajax({
+							method: 'POST',
+			      	url: '/mty/Welcome/save_',
+							dataType: 'json',
+							data: {
+								'nombre'   : nombre,
+								'email'  : email,
+								'telefono': telefono
+			      }
+					}).done(function (r) {
+						if(r.success == 0){
+			        	$('#message_captcha').html('<div class="alert alert-danger" role="alert">'+r.msg+'</div>');
+			        }else{
+			        	$('#content_').html('<div class="mpr17 mb-3 text-center">'+r.msg+'</div>');
+			        }
+					});
+
+
+
+
+			}
+
+
+
+		});
+	});
+</script>
+
+    </body>
+
+  </html>
